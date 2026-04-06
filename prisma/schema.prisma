@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Preferences
+  distanceUnit      String  @default("kilometers")
+  fuelUnit          String  @default("liters")
+  temperatureUnit   String  @default("celsius")
+  currency          String  @default("USD")
+  theme             String  @default("auto")
+  fontSize          String  @default("medium")
+  
+  // Notification settings
+  maintenanceReminders Boolean @default(true)
+  serviceDueAlerts     Boolean @default(true)
+  promotionalOffers    Boolean @default(true)
+  diagnosticAlerts     Boolean @default(true)
+  
+  // Privacy settings
+  allowAnonymousData  Boolean @default(false)
+  allowAnalytics      Boolean @default(true)
+  allowThirdPartyData Boolean @default(false)
+  
+  // Email preferences
+  marketingEmails     Boolean @default(true)
+  transactionalEmails Boolean @default(true)
+  
+  // Relationships
+  vehicles      Vehicle[]
+  chatSessions  ChatSession[]
+  offerClaims   OfferClaim[]
+  deviceTokens  DeviceToken[]
+  
+  @@map("users")
+}
+
+model Vehicle {
+  id           String   @id @default(cuid())
+  userId       String
+  make         String
+  model        String
+  year         Int
+  mileage      Int
+  licensePlate String?
+  isPrimary    Boolean  @default(false)
+  imageUrl     String?
+  healthScore  Int?     @default(100)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relationships
+  user             User              @relation(fields: [userId], references: [id])
+  maintenanceItems MaintenanceItem[]
+  serviceRecords   ServiceRecord[]
+  fuelLogs         FuelLog[]
+  chatSessions     ChatSession[]
+  
+  @@map("vehicles")
+  @@index([userId])
+}
+
+model MaintenanceItem {
+  id        String   @id @default(cuid())
+  vehicleId String
+  name      String
+  status    String   // 'overdue', 'due_soon', 'scheduled', 'good'
+  dueInKm   Int?
+  dueDate   DateTime?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  
+  @@map("maintenance_items")
+  @@index([vehicleId])
+  @@index([status])
+}
+
+model ServiceRecord {
+  id               String   @id @default(cuid())
+  vehicleId        String
+  serviceType      String
+  date             DateTime
+  mileageAtService Int
+  shopName         String?
+  cost             Float?
+  currency         String?  @default("USD")
+  receiptUrl       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  // Relationships
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  
+  @@map("service_records")
+  @@index([vehicleId])
+  @@index([date])
+}
+
+model FuelLog {
+  id             String   @id @default(cuid())
+  vehicleId      String
+  date           DateTime
+  liters         Float    // Always stored in liters
+  costPerLiter   Float
+  totalCost      Float
+  mileageAtFill  Int
+  station        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relationships
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  
+  @@map("fuel_logs")
+  @@index([vehicleId])
+  @@index([date])
+}
+
+model ChatSession {
+  id        String   @id @default(cuid())
+  userId    String
+  vehicleId String?
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  user    User         @relation(fields: [userId], references: [id])
+  vehicle Vehicle?     @relation(fields: [vehicleId], references: [id])
+  messages ChatMessage[]
+  
+  @@map("chat_sessions")
+  @@index([userId])
+  @@index([vehicleId])
+  @@index([updatedAt])
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  sessionId      String
+  role           String   // 'user' or 'assistant'
+  content        String
+  diagnosisResult String?   // Stores JSON as string
+  createdAt      DateTime @default(now())
+  
+  // Relationships
+  session ChatSession @relation(fields: [sessionId], references: [id])
+  
+  @@map("chat_messages")
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model Shop {
+  id          String   @id @default(cuid())
+  name        String
+  rating      Float
+  reviewCount Int
+  latitude    Float
+  longitude   Float
+  distanceKm  Float?
+  isOpen      Boolean  @default(true)
+  closingTime String?
+  address     String
+  phone       String?
+  specialties String   // Store as JSON string since SQLite doesn't support arrays
+  description String?
+  hours       String?  // Store hours as JSON string
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  offers Offer[]
+  
+  @@map("shops")
+  @@index([latitude, longitude])
+}
+
+model Offer {
+  id              String   @id @default(cuid())
+  shopId          String
+  badge           String
+  title           String
+  subtitle        String
+  buttonLabel     String
+  backgroundColor String
+  description     String
+  validUntil      DateTime
+  terms           String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relationships
+  shop        Shop         @relation(fields: [shopId], references: [id])
+  offerClaims OfferClaim[]
+  
+  @@map("offers")
+  @@index([shopId])
+  @@index([validUntil])
+  @@index([isActive])
+}
+
+model OfferClaim {
+  id        String   @id @default(cuid())
+  userId    String
+  offerId   String
+  claimedAt DateTime @default(now())
+  
+  // Relationships
+  user  User  @relation(fields: [userId], references: [id])
+  offer Offer @relation(fields: [offerId], references: [id])
+  
+  @@map("offer_claims")
+  @@unique([userId, offerId])
+  @@index([userId])
+  @@index([offerId])
+}
+
+model DeviceToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  platform  String   // 'ios', 'android', 'web'
+  createdAt DateTime @default(now())
+  
+  // Relationships
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("device_tokens")
+  @@index([userId])
+}
