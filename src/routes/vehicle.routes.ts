@@ -7,6 +7,13 @@ const router = Router();
 // All vehicle routes require authentication
 router.use(authenticate);
 
+import multer from 'multer';
+
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
+
 // Vehicle routes
 router.get('/', VehicleController.getVehicles);
 router.get('/:id', VehicleController.getVehicle);
@@ -14,6 +21,7 @@ router.post('/', VehicleController.createVehicle);
 router.put('/:id', VehicleController.updateVehicle);
 router.delete('/:id', VehicleController.deleteVehicle);
 router.post('/:id/primary', VehicleController.setPrimaryVehicle);
+router.post('/:id/image', upload.single('image'), VehicleController.uploadImage);
 
 // Vehicle sub-resources
 router.get('/:id/maintenance', VehicleController.getMaintenanceItems);

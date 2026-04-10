@@ -99,6 +99,7 @@ export interface UpdateVehicleRequest {
   year?: number;
   mileage?: number;
   licensePlate?: string;
+  imageUrl?: string;
 }
 
 // Maintenance types

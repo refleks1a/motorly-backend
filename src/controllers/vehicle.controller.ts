@@ -246,6 +246,7 @@ export class VehicleController {
       }
       
       if (updates.licensePlate !== undefined) updateData.licensePlate = updates.licensePlate;
+      if (updates.imageUrl !== undefined) updateData.imageUrl = updates.imageUrl;
 
       // Update vehicle
       const updatedVehicle = await prisma.vehicle.update({
@@ -282,6 +283,64 @@ export class VehicleController {
     } catch (error) {
       console.error('Update vehicle error:', error);
       res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async uploadImage(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user?.id;
+      const vehicleId = req.params.id as string;
+
+      if (!userId) {
+        res.status(401).json({ error: 'Not authenticated' });
+        return;
+      }
+
+      // Check if vehicle exists and belongs to user
+      const existingVehicle = await prisma.vehicle.findFirst({
+        where: { id: vehicleId, userId }
+      });
+
+      if (!existingVehicle) {
+        res.status(404).json({ error: 'Vehicle not found' });
+        return;
+      }
+
+      const file = (req as any).file;
+      if (!file) {
+        res.status(400).json({ error: 'No image file provided' });
+        return;
+      }
+
+      const { uploadImageToS3 } = await import('../services/s3.service');
+      const imageUrl = await uploadImageToS3(file.buffer, file.mimetype, file.originalname);
+
+      // Update the vehicle's imageUrl
+      const updatedVehicle = await prisma.vehicle.update({
+        where: { id: vehicleId },
+        data: { imageUrl },
+        select: {
+          id: true,
+          make: true,
+          model: true,
+          year: true,
+          mileage: true,
+          licensePlate: true,
+          isPrimary: true,
+          imageUrl: true,
+          healthScore: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      });
+
+      res.status(200).json(updatedVehicle);
+    } catch (error) {
+      console.error('Upload image error:', error);
+      res.status(500).json({ 
+        error: 'Internal server error while uploading image',
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   }
 
