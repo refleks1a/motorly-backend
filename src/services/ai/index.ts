@@ -1,5 +1,6 @@
 import { SimulatedAIService } from './simulated.service';
 import { AIResponse, AIContext } from './types';
+import OpenAI from 'openai';
 
 export class AIService {
   private static instance: AIService;
@@ -21,7 +22,7 @@ export class AIService {
     this.openAIApiKey = process.env.OPENAI_API_KEY;
     this.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
     this.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
-    this.deepseekBaseUrl = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
+    this.deepseekBaseUrl = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com/v1';
     this.deepseekModel = process.env.DEEPSEEK_MODEL || 'deepseek-chat';
     
     if (this.useRealAI && !this.openAIApiKey && !this.anthropicApiKey && !this.deepseekApiKey) {
@@ -104,13 +105,69 @@ export class AIService {
     userMessage: string,
     context?: AIContext
   ): Promise<AIResponse> {
+    if (!this.deepseekApiKey) {
+      throw new Error('DeepSeek API key is not configured');
+    }
+
+    const openai = new OpenAI({
+      apiKey: this.deepseekApiKey,
+      baseURL: this.deepseekBaseUrl,
+    });
+
     const prompt = this.buildAIPrompt(userMessage, context);
-    
-    // In a real implementation, this would call the DeepSeek API
-    // For now, we'll simulate it
-    console.log('DeepSeek prompt:', prompt);
-    
-    return this.simulatedService.generateDiagnosis(userMessage, context);
+    const systemPrompt = `You are a helpful automotive AI assistant. Your response must be in valid JSON format.
+You must return a JSON object with this exact structure, with no markdown wrappers or additional text:
+{
+  "content": "A helpful conversational reply explaining the diagnosis...",
+  "diagnosisResult": {
+    "confidence": 0.85,
+    "severity": "low", // must be exactly "low", "medium", or "high"
+    "potentialIssues": [
+      {
+        "name": "Issue Name",
+        "description": "Short explanation",
+        "estimatedCost": "$100 - $300",
+        "urgency": "soon" // must be "immediate", "soon", or "later"
+      }
+    ],
+    "recommendedActions": ["Do this", "Check that"]
+  }
+}
+
+Do not include backticks or "json" tags. Just return the raw JSON object.`;
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: this.deepseekModel || 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: prompt }
+        ]
+      });
+
+      const messageContent = response.choices[0]?.message?.content;
+      if (!messageContent) {
+        throw new Error('Empty response from DeepSeek API');
+      }
+
+      let cleanContent = messageContent.trim();
+      if (cleanContent.startsWith('```')) {
+        cleanContent = cleanContent.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '');
+      }
+      cleanContent = cleanContent.trim();
+
+      const parsedResponse = JSON.parse(cleanContent);
+      
+      // Ensure the returned structure is correct, fallback content if necessary
+      return {
+        content: parsedResponse.content || "I have analyzed your vehicle's issue, please review the diagnosis card.",
+        diagnosisResult: parsedResponse.diagnosisResult
+      };
+
+    } catch (error) {
+      console.error('DeepSeek API call failed:', error);
+      throw error;
+    }
   }
 
   /**
