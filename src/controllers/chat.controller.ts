@@ -376,7 +376,12 @@ export class ChatController {
         return;
       }
 
-      // Delete the session (Prisma will cascade delete messages)
+      // Delete the session's messages first since onDelete: Cascade is not set in Prisma schema
+      await prisma.chatMessage.deleteMany({
+        where: { sessionId: sessionId }
+      });
+
+      // Then delete the actual session
       await prisma.chatSession.delete({
         where: { id: sessionId }
       });
