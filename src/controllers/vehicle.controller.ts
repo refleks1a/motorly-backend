@@ -313,7 +313,7 @@ export class VehicleController {
       }
 
       const { uploadImageToS3 } = await import('../services/s3.service');
-      const imageUrl = await uploadImageToS3(file.buffer, file.mimetype, file.originalname);
+      const imageUrl = await uploadImageToS3(file.buffer, file.mimetype, file.originalname, 'vehicles');
 
       // Update the vehicle's imageUrl
       const updatedVehicle = await prisma.vehicle.update({

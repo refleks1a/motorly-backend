@@ -156,6 +156,7 @@ model ChatMessage {
   sessionId      String
   role           String   // 'user' or 'assistant'
   content        String
+  imageUrl       String?
   diagnosisResult String?   // Stores JSON as string
   createdAt      DateTime @default(now())
   

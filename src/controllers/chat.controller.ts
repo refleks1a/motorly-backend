@@ -8,6 +8,7 @@ import {
   SendMessageRequest
 } from '../types';
 import { aiService } from '../services/ai';
+import { uploadImageToS3 } from '../services/s3.service';
 
 export class ChatController {
   // Get all chat sessions for the authenticated user
@@ -84,6 +85,7 @@ export class ChatController {
               content: true,
               role: true,
               createdAt: true,
+              imageUrl: true,
               diagnosisResult: true
             }
           },
@@ -108,6 +110,7 @@ export class ChatController {
         content: message.content,
         role: message.role as 'user' | 'assistant',
         createdAt: message.createdAt.toISOString(),
+        imageUrl: message.imageUrl,
         diagnosisResult: message.diagnosisResult ? JSON.parse(message.diagnosisResult) as DiagnosisResult : undefined
       }));
 
@@ -262,6 +265,7 @@ export class ChatController {
       const userId = (req as any).user?.id;
       const sessionId = req.params.id as string;
       const { content }: SendMessageRequest = req.body;
+      const file = req.file;
 
       if (!userId) {
         res.status(401).json({ error: 'Not authenticated' });
@@ -286,23 +290,36 @@ export class ChatController {
         return;
       }
 
+      let imageUrl: string | null = null;
+      if (file) {
+        try {
+          imageUrl = await uploadImageToS3(file.buffer, file.mimetype, file.originalname);
+        } catch (uploadError) {
+          console.error('Failed to upload image:', uploadError);
+          res.status(500).json({ error: 'Failed to upload image' });
+          return;
+        }
+      }
+
       // Create user message
       const userMessage = await prisma.chatMessage.create({
         data: {
           sessionId,
           content: content.trim(),
-          role: 'user'
+          role: 'user',
+          imageUrl
         },
         select: {
           id: true,
           content: true,
           role: true,
-          createdAt: true
+          createdAt: true,
+          imageUrl: true
         }
       });
 
       // Generate AI response with context
-      const aiResponse = await ChatController.generateAIResponse(content.trim(), session.vehicleId, userId, sessionId);
+      const aiResponse = await ChatController.generateAIResponse(content.trim(), session.vehicleId, userId, sessionId, imageUrl);
 
       // Create AI message
       const aiMessage = await prisma.chatMessage.create({
@@ -330,6 +347,8 @@ export class ChatController {
       const formattedUserMessage: ChatMessage = {
         id: userMessage.id,
         content: userMessage.content,
+        // @ts-ignore
+        imageUrl: userMessage.imageUrl,
         role: userMessage.role as 'user',
         createdAt: userMessage.createdAt.toISOString()
       };
@@ -398,11 +417,16 @@ export class ChatController {
     userMessage: string,
     vehicleId?: string | null,
     userId?: string,
-    sessionId?: string
+    sessionId?: string,
+    imageUrl?: string | null
   ): Promise<{ content: string; diagnosisResult?: DiagnosisResult }> {
     try {
       // Build context for AI
       const context: any = {};
+      
+      if (imageUrl) {
+        context.imageUrl = imageUrl;
+      }
 
       // Add vehicle context if available
       if (vehicleId && userId) {

@@ -47,10 +47,22 @@ export class AIService {
   ): Promise<AIResponse> {
     if (this.useRealAI) {
       try {
-        // Try OpenAI first, then DeepSeek, then Anthropic
-        if (this.openAIApiKey) {
+        const hasImage = !!context?.imageUrl;
+
+        // Dynamic Routing Strategy:
+        // 1. If message has an image and OpenAI is configured -> Route to OpenAI (Vision)
+        // 2. If it's text-only and DeepSeek is configured -> Route to DeepSeek (Cost-effective reasoning)
+        if (hasImage && this.openAIApiKey) {
+          console.log('Image detected: Routing AI request to OpenAI (Vision supported)');
+          return await this.generateOpenAIResponse(userMessage, context);
+        } else if (!hasImage && this.deepseekApiKey) {
+          console.log('Text-only request: Routing AI request to DeepSeek');
+          return await this.generateDeepSeekResponse(userMessage, context);
+        } else if (this.openAIApiKey) {
+          console.log('Fallback: Routing AI request to OpenAI');
           return await this.generateOpenAIResponse(userMessage, context);
         } else if (this.deepseekApiKey) {
+          console.log('Fallback: Routing AI request to DeepSeek');
           return await this.generateDeepSeekResponse(userMessage, context);
         } else if (this.anthropicApiKey) {
           return await this.generateAnthropicResponse(userMessage, context);
@@ -66,20 +78,19 @@ export class AIService {
   }
 
   /**
-   * Generate response using OpenAI GPT
+   * Generate response using OpenAI GPT (with vision support)
    */
   private async generateOpenAIResponse(
     userMessage: string,
     context?: AIContext
   ): Promise<AIResponse> {
-    const prompt = this.buildAIPrompt(userMessage, context);
-    
-    // In a real implementation, this would call the OpenAI API
-    // For now, we'll simulate it and return a more sophisticated response
-    console.log('OpenAI prompt:', prompt);
-    
-    // Use simulated service with enhanced context
-    return this.simulatedService.generateDiagnosis(userMessage, context);
+    if (!this.openAIApiKey) {
+      throw new Error('OpenAI API key is not configured');
+    }
+
+    const openai = new OpenAI({ apiKey: this.openAIApiKey });
+    const model = process.env.OPENAI_MODEL || 'gpt-4o';
+    return await this.callOpenAICompatibleModel(openai, model, userMessage, context, true);
   }
 
   /**
@@ -99,7 +110,7 @@ export class AIService {
   }
 
   /**
-   * Generate response using DeepSeek
+   * Generate response using DeepSeek (with vision support via OpenAI-compatible API)
    */
   private async generateDeepSeekResponse(
     userMessage: string,
@@ -114,20 +125,35 @@ export class AIService {
       baseURL: this.deepseekBaseUrl,
     });
 
-    const prompt = this.buildAIPrompt(userMessage, context);
+    const model = this.deepseekModel || 'deepseek-chat';
+    return await this.callOpenAICompatibleModel(openai, model, userMessage, context, false);
+  }
+
+  /**
+   * Shared logic for any OpenAI-compatible API (OpenAI, DeepSeek, etc.)
+   * Supports vision: when context.imageUrl is present, sends the image as a
+   * multimodal content array so the model can actually see it.
+   */
+  private async callOpenAICompatibleModel(
+    client: OpenAI,
+    model: string,
+    userMessage: string,
+    context?: AIContext,
+    supportsVision: boolean = false
+  ): Promise<AIResponse> {
     const systemPrompt = `You are a helpful automotive AI assistant. Your response must be in valid JSON format.
 You must return a JSON object with this exact structure, with no markdown wrappers or additional text:
 {
   "content": "A helpful conversational reply explaining the diagnosis...",
   "diagnosisResult": {
     "confidence": 0.85,
-    "severity": "low", // must be exactly "low", "medium", or "high"
+    "severity": "low",
     "potentialIssues": [
       {
         "name": "Issue Name",
         "description": "Short explanation",
         "estimatedCost": "$100 - $300",
-        "urgency": "soon" // must be "immediate", "soon", or "later"
+        "urgency": "soon"
       }
     ],
     "recommendedActions": ["Do this", "Check that"]
@@ -136,18 +162,44 @@ You must return a JSON object with this exact structure, with no markdown wrappe
 
 Do not include backticks or "json" tags. Just return the raw JSON object.`;
 
+    // Build the text portion of the prompt (vehicle context, history, etc.)
+    const textPrompt = this.buildAIPrompt(userMessage, context);
+
+    // Build user message content — multimodal if image is present
+    let userContent: OpenAI.Chat.ChatCompletionContentPart[] | string;
+
+    if (context?.imageUrl && supportsVision) {
+      userContent = [
+        { type: 'text', text: textPrompt },
+        {
+          type: 'image_url',
+          image_url: {
+            url: context.imageUrl,
+            detail: 'high',
+          },
+        },
+      ];
+    } else {
+      let finalPrompt = textPrompt;
+      if (context?.imageUrl && !supportsVision) {
+          finalPrompt += `\n[Image URL provided but vision analysis is not supported by this AI model: ${context.imageUrl}]`;
+      }
+      userContent = finalPrompt;
+    }
+
     try {
-      const response = await openai.chat.completions.create({
-        model: this.deepseekModel || 'deepseek-chat',
+      const response = await client.chat.completions.create({
+        model,
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ]
+          { role: 'user', content: userContent },
+        ],
+        response_format: { type: 'json_object' },
       });
 
       const messageContent = response.choices[0]?.message?.content;
       if (!messageContent) {
-        throw new Error('Empty response from DeepSeek API');
+        throw new Error('Empty response from AI API');
       }
 
       let cleanContent = messageContent.trim();
@@ -156,16 +208,23 @@ Do not include backticks or "json" tags. Just return the raw JSON object.`;
       }
       cleanContent = cleanContent.trim();
 
-      const parsedResponse = JSON.parse(cleanContent);
-      
-      // Ensure the returned structure is correct, fallback content if necessary
+      let parsedResponse: any;
+      try {
+        parsedResponse = JSON.parse(cleanContent);
+      } catch (parseError) {
+        console.warn('AI returned invalid JSON, wrapping in text fallback:', cleanContent);
+        parsedResponse = {
+          content: cleanContent,
+          diagnosisResult: null
+        };
+      }
+
       return {
         content: parsedResponse.content || "I have analyzed your vehicle's issue, please review the diagnosis card.",
-        diagnosisResult: parsedResponse.diagnosisResult
+        diagnosisResult: parsedResponse.diagnosisResult,
       };
-
     } catch (error) {
-      console.error('DeepSeek API call failed:', error);
+      console.error(`AI API call failed (model: ${model}):`, error);
       throw error;
     }
   }
@@ -198,6 +257,11 @@ Do not include backticks or "json" tags. Just return the raw JSON object.`;
     }
 
     prompt += `Current issue: ${userMessage}\n\n`;
+
+    if (context?.imageUrl) {
+      prompt += `[User has attached an image of the vehicle issue for visual analysis]\n\n`;
+    }
+
     prompt += `Please provide:\n1. A clear diagnosis explanation\n2. Likely causes (list 2-3 most probable)\n3. Recommended next steps\n4. Urgency level (low/medium/high)\n5. Estimated repair cost range if possible\n\n`;
     prompt += `Format the response in a helpful, structured way for a car owner.`;
 

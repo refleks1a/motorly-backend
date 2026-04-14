@@ -7,8 +7,14 @@ dotenv.config();
 
 /**
  * Uploads a file buffer to AWS S3
+ * @param folder - S3 folder prefix (e.g. 'vehicles' or 'chat-images')
  */
-export async function uploadImageToS3(fileBuffer: Buffer, mimetype: string, originalName: string = 'image.jpg'): Promise<string> {
+export async function uploadImageToS3(
+  fileBuffer: Buffer,
+  mimetype: string,
+  originalName: string = 'image.jpg',
+  folder: string = 'chat-images'
+): Promise<string> {
   // Create S3 client inside the function to ensure process.env is fully loaded
   // and to throw error precisely when an upload is attempted if credentials are bad
   const region = process.env.AWS_REGION;
@@ -29,7 +35,7 @@ export async function uploadImageToS3(fileBuffer: Buffer, mimetype: string, orig
   });
 
   const extension = path.extname(originalName) || '.jpg';
-  const key = `vehicles/${uuidv4()}${extension}`;
+  const key = `${folder}/${uuidv4()}${extension}`;
   
   const command = new PutObjectCommand({
     Bucket: bucketName,

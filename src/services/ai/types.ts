@@ -22,6 +22,7 @@ export interface AIContext {
     content: string;
     timestamp: string;
   }>;
+  imageUrl?: string | null;
 }
 
 export interface IssueIdentification {
