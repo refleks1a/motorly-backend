@@ -16,6 +16,7 @@ import authRoutes from './routes/auth.routes';
 import vehicleRoutes from './routes/vehicle.routes';
 import chatRoutes from './routes/chat.routes';
 import shopRoutes from './routes/shop.routes';
+import newsRoutes from './routes/news.routes';
 
 // Create Express app
 const app = express();
@@ -68,6 +69,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/shops', shopRoutes);
+app.use('/api/news', newsRoutes);
 
 // Error handling middleware
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
@@ -92,6 +94,7 @@ const server = app.listen(PORT, () => {
   console.log(`🚙 Vehicle endpoints available at /api/vehicles`);
   console.log(`🤖 AI Diagnosis Chat available at /api/chat`);
   console.log(`🔧 Auto Shop Search available at /api/shops`);
+  console.log(`📰 Automotive News available at /api/news`);
   console.log(`📚 API Documentation available at http://localhost:${PORT}/api-docs`);
   console.log(`📄 API Spec available at http://localhost:${PORT}/api-docs.json`);
 });
