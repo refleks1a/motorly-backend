@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../index';
+import { VehicleHealthService } from '../services/vehicle-health.service';
 import { 
   CreateVehicleRequest,
   UpdateVehicleRequest,
@@ -267,6 +268,9 @@ export class VehicleController {
         }
       });
 
+      // Recalculate health score
+      const newHealthScore = await VehicleHealthService.recalculate(vehicleId);
+
       const formattedVehicle: Vehicle = {
         id: updatedVehicle.id,
         make: updatedVehicle.make,
@@ -276,7 +280,7 @@ export class VehicleController {
         licensePlate: updatedVehicle.licensePlate || undefined,
         isPrimary: updatedVehicle.isPrimary,
         imageUrl: updatedVehicle.imageUrl || undefined,
-        healthScore: updatedVehicle.healthScore || undefined
+        healthScore: newHealthScore
       };
 
       res.status(200).json(formattedVehicle);
@@ -614,6 +618,8 @@ export class VehicleController {
         notes: maintenanceItem.notes || undefined
       };
 
+      await VehicleHealthService.recalculate(vehicleId);
+
       res.status(201).json(formattedItem);
     } catch (error) {
       console.error('Create maintenance item error:', error);
@@ -663,6 +669,8 @@ export class VehicleController {
       await prisma.maintenanceItem.delete({
         where: { id: maintenanceItemId }
       });
+
+      await VehicleHealthService.recalculate(vehicleId);
 
       res.status(200).json({ message: 'Maintenance item deleted successfully' });
     } catch (error) {
@@ -731,6 +739,8 @@ export class VehicleController {
           updatedAt: true,
         }
       });
+
+      await VehicleHealthService.recalculate(vehicleId);
 
       res.status(200).json(updatedItem);
     } catch (error) {
@@ -885,6 +895,8 @@ export class VehicleController {
         receiptUrl: serviceRecord.receiptUrl || undefined
       };
 
+      await VehicleHealthService.recalculate(vehicleId);
+
       res.status(201).json(formattedRecord);
     } catch (error) {
       console.error('Create service record error:', error);
@@ -990,6 +1002,8 @@ export class VehicleController {
         receiptUrl: updatedRecord.receiptUrl || undefined
       };
 
+      await VehicleHealthService.recalculate(vehicleId);
+
       res.status(200).json(formattedRecord);
     } catch (error) {
       console.error('Update service record error:', error);
@@ -1039,6 +1053,8 @@ export class VehicleController {
       await prisma.serviceRecord.delete({
         where: { id: recordId }
       });
+
+      await VehicleHealthService.recalculate(vehicleId);
 
       res.status(200).json({ message: 'Service record deleted successfully' });
     } catch (error) {
