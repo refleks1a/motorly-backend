@@ -1,0 +1,1319 @@
+{
+  "P0100": {
+    "name": "Mass Air Flow (MAF) Circuit Malfunction",
+    "description": "The MAF sensor signal is out of expected range.",
+    "commonCauses": [
+      "Dirty or faulty MAF sensor",
+      "Air intake leak",
+      "Wiring harness damage"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0101": {
+    "name": "MAF Sensor Range/Performance",
+    "description": "MAF sensor readings are out of the expected performance range.",
+    "commonCauses": [
+      "Dirty MAF sensor",
+      "Air filter clogged",
+      "Vacuum leak"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0102": {
+    "name": "MAF Sensor Low Input",
+    "description": "MAF sensor signal is lower than expected.",
+    "commonCauses": [
+      "Dirty MAF sensor",
+      "Wiring short to ground",
+      "Faulty sensor"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0103": {
+    "name": "MAF Sensor High Input",
+    "description": "MAF sensor signal is higher than expected.",
+    "commonCauses": [
+      "Open circuit in sensor wiring",
+      "Faulty MAF sensor"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0110": {
+    "name": "Intake Air Temperature Sensor Circuit",
+    "description": "IAT circuit issue detected.",
+    "commonCauses": [
+      "Faulty IAT sensor",
+      "Damaged wiring",
+      "Corroded connector"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0113": {
+    "name": "IAT Sensor High Input",
+    "description": "Intake air temperature sensor reading too high (or open circuit).",
+    "commonCauses": [
+      "Open circuit",
+      "Faulty IAT sensor",
+      "Dirty air filter"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0120": {
+    "name": "Throttle Position Sensor (TPS) Circuit Malfunction",
+    "description": "TPS signal is out of range or erratic.",
+    "commonCauses": [
+      "Faulty TPS",
+      "Dirty throttle body",
+      "Wiring issue"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0121": {
+    "name": "TPS Range/Performance Problem",
+    "description": "TPS signal does not correlate with MAP/MAF sensor data.",
+    "commonCauses": [
+      "Worn TPS",
+      "Throttle body carbon buildup",
+      "Accelerator pedal sensor issue"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0122": {
+    "name": "TPS Circuit Low Input",
+    "description": "TPS signal voltage is lower than expected.",
+    "commonCauses": [
+      "Short to ground in TPS wiring",
+      "Faulty TPS",
+      "Poor connector contact"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0123": {
+    "name": "TPS Circuit High Input",
+    "description": "TPS signal voltage is higher than expected.",
+    "commonCauses": [
+      "Open in TPS circuit",
+      "Faulty TPS",
+      "Short to voltage"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0128": {
+    "name": "Coolant Temperature Below Thermostat Regulating Temperature",
+    "description": "Engine is not reaching normal operating temperature.",
+    "commonCauses": [
+      "Stuck-open thermostat",
+      "Faulty coolant temp sensor",
+      "Low coolant level"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0130": {
+    "name": "O2 Sensor Circuit (Bank 1, Sensor 1)",
+    "description": "Upstream oxygen sensor signal malfunction.",
+    "commonCauses": [
+      "Failed O2 sensor",
+      "Exhaust leak near sensor",
+      "Wiring damage"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0131": {
+    "name": "O2 Sensor Low Voltage (Bank 1, Sensor 1)",
+    "description": "O2 sensor voltage consistently low (lean signal).",
+    "commonCauses": [
+      "Lean fuel mixture",
+      "O2 sensor failure",
+      "Air leak in exhaust"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0132": {
+    "name": "O2 Sensor High Voltage (Bank 1, Sensor 1)",
+    "description": "O2 sensor voltage consistently high (rich signal).",
+    "commonCauses": [
+      "Rich fuel mixture",
+      "Coolant in exhaust",
+      "Faulty O2 sensor"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0133": {
+    "name": "O2 Sensor Slow Response (Bank 1, Sensor 1)",
+    "description": "O2 sensor is responding too slowly.",
+    "commonCauses": [
+      "Aging O2 sensor",
+      "Oil contamination on sensor",
+      "Exhaust leak"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0134": {
+    "name": "O2 Sensor No Activity (Bank 1, Sensor 1)",
+    "description": "O2 sensor has no activity for excessive period.",
+    "commonCauses": [
+      "Failed O2 sensor",
+      "Broken heater circuit",
+      "Damaged wiring"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0141": {
+    "name": "O2 Sensor Heater Circuit (Bank 1, Sensor 2)",
+    "description": "Downstream O2 sensor heater circuit malfunction.",
+    "commonCauses": [
+      "Failed O2 sensor heater",
+      "Fuse blown",
+      "Wiring issue"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0150": {
+    "name": "O2 Sensor Circuit (Bank 2, Sensor 1)",
+    "description": "Upstream O2 sensor fault on Bank 2.",
+    "commonCauses": [
+      "Failed O2 sensor",
+      "Exhaust leak",
+      "Wiring short"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0171": {
+    "name": "System Too Lean (Bank 1)",
+    "description": "Engine's air-fuel mixture is too lean on Bank 1. ECM is adding more fuel to compensate.",
+    "commonCauses": [
+      "Vacuum/air leak",
+      "Dirty or faulty MAF sensor",
+      "Clogged fuel injectors",
+      "Weak fuel pump",
+      "Low fuel pressure"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0172": {
+    "name": "System Too Rich (Bank 1)",
+    "description": "Engine's air-fuel mixture is too rich on Bank 1.",
+    "commonCauses": [
+      "Leaking fuel injectors",
+      "High fuel pressure",
+      "Faulty MAP sensor",
+      "Coolant temp sensor issue"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0174": {
+    "name": "System Too Lean (Bank 2)",
+    "description": "Air-fuel mixture too lean on Bank 2.",
+    "commonCauses": [
+      "Vacuum leak on Bank 2 side",
+      "Faulty O2 sensor",
+      "Low fuel pressure"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0175": {
+    "name": "System Too Rich (Bank 2)",
+    "description": "Air-fuel mixture too rich on Bank 2.",
+    "commonCauses": [
+      "Leaking injectors on Bank 2",
+      "Faulty coolant sensor",
+      "High fuel pressure"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0190": {
+    "name": "Fuel Rail Pressure Sensor Circuit",
+    "description": "Fuel rail pressure sensor signal is out of range.",
+    "commonCauses": [
+      "Faulty fuel pressure sensor",
+      "Wiring issue",
+      "Damaged fuel rail"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0200": {
+    "name": "Injector Circuit Malfunction",
+    "description": "Open or short in fuel injector circuit.",
+    "commonCauses": [
+      "Faulty fuel injector",
+      "Wiring damage",
+      "Faulty ECM"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0201": {
+    "name": "Injector Circuit — Cylinder 1",
+    "description": "Fuel injector circuit fault for cylinder 1.",
+    "commonCauses": [
+      "Failed injector",
+      "Wiring short/open",
+      "Faulty ECM driver"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0202": {
+    "name": "Injector Circuit — Cylinder 2",
+    "description": "Fuel injector circuit fault for cylinder 2.",
+    "commonCauses": [
+      "Failed injector",
+      "Wiring short/open"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0203": {
+    "name": "Injector Circuit — Cylinder 3",
+    "description": "Fuel injector circuit fault for cylinder 3.",
+    "commonCauses": [
+      "Failed injector",
+      "Wiring short/open"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0204": {
+    "name": "Injector Circuit — Cylinder 4",
+    "description": "Fuel injector circuit fault for cylinder 4.",
+    "commonCauses": [
+      "Failed injector",
+      "Wiring short/open"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0218": {
+    "name": "Transmission Over Temperature",
+    "description": "Transmission fluid is overheating.",
+    "commonCauses": [
+      "Low transmission fluid",
+      "Towing/overloading",
+      "Faulty transmission cooler",
+      "Failing torque converter"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0230": {
+    "name": "Fuel Pump Primary Circuit",
+    "description": "Fuel pump relay or wiring fault.",
+    "commonCauses": [
+      "Failed fuel pump relay",
+      "Wiring issue",
+      "Faulty PCM"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0261": {
+    "name": "Cylinder 1 Injector Low",
+    "description": "Cylinder 1 injector circuit voltage too low.",
+    "commonCauses": [
+      "Short to ground in injector harness",
+      "Failed injector"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0300": {
+    "name": "Random/Multiple Cylinder Misfire Detected",
+    "description": "The ECM detected misfires in multiple or random cylinders. This means combustion is incomplete, risking engine and catalytic converter damage.",
+    "commonCauses": [
+      "Worn or fouled spark plugs",
+      "Faulty ignition coils",
+      "Bad fuel injectors",
+      "Vacuum leak",
+      "Low compression",
+      "Low fuel pressure",
+      "Faulty crankshaft position sensor"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0301": {
+    "name": "Cylinder 1 Misfire Detected",
+    "description": "Misfire detected specifically in cylinder 1.",
+    "commonCauses": [
+      "Faulty spark plug (cyl 1)",
+      "Bad ignition coil (cyl 1)",
+      "Clogged fuel injector (cyl 1)",
+      "Low compression in cylinder 1"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0302": {
+    "name": "Cylinder 2 Misfire Detected",
+    "description": "Misfire detected in cylinder 2.",
+    "commonCauses": [
+      "Faulty spark plug (cyl 2)",
+      "Bad ignition coil (cyl 2)",
+      "Clogged injector (cyl 2)"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0303": {
+    "name": "Cylinder 3 Misfire Detected",
+    "description": "Misfire detected in cylinder 3.",
+    "commonCauses": [
+      "Faulty spark plug (cyl 3)",
+      "Bad ignition coil (cyl 3)",
+      "Clogged injector (cyl 3)"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0304": {
+    "name": "Cylinder 4 Misfire Detected",
+    "description": "Misfire detected in cylinder 4.",
+    "commonCauses": [
+      "Faulty spark plug (cyl 4)",
+      "Bad ignition coil (cyl 4)",
+      "Clogged injector (cyl 4)"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0305": {
+    "name": "Cylinder 5 Misfire Detected",
+    "description": "Misfire detected in cylinder 5.",
+    "commonCauses": [
+      "Faulty spark plug (cyl 5)",
+      "Bad ignition coil (cyl 5)"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0306": {
+    "name": "Cylinder 6 Misfire Detected",
+    "description": "Misfire detected in cylinder 6.",
+    "commonCauses": [
+      "Faulty spark plug (cyl 6)",
+      "Bad ignition coil"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0325": {
+    "name": "Knock Sensor 1 Circuit (Bank 1)",
+    "description": "Knock sensor circuit malfunction detected.",
+    "commonCauses": [
+      "Faulty knock sensor",
+      "Damaged wiring",
+      "Loose sensor mounting bolt"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0335": {
+    "name": "Crankshaft Position Sensor A Circuit",
+    "description": "CKP sensor A circuit malfunction — engine may not start or run poorly.",
+    "commonCauses": [
+      "Faulty crankshaft position sensor",
+      "Damaged reluctor ring",
+      "Wiring damage"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0340": {
+    "name": "Camshaft Position Sensor A Circuit (Bank 1)",
+    "description": "CMP sensor circuit malfunction on Bank 1.",
+    "commonCauses": [
+      "Failed cam position sensor",
+      "Timing chain/belt issue",
+      "Damaged tone wheel"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0400": {
+    "name": "EGR Flow Malfunction",
+    "description": "Exhaust Gas Recirculation system flow is outside expected range.",
+    "commonCauses": [
+      "Clogged EGR valve",
+      "Failed EGR valve",
+      "Blocked EGR passages"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0401": {
+    "name": "EGR Flow Insufficient",
+    "description": "Not enough EGR flow detected.",
+    "commonCauses": [
+      "Clogged EGR valve",
+      "Blocked EGR passages",
+      "Failed DPFE sensor"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0402": {
+    "name": "EGR Flow Excessive",
+    "description": "Too much EGR flow detected.",
+    "commonCauses": [
+      "Stuck-open EGR valve",
+      "Faulty DPFE sensor",
+      "EGR vacuum leak"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0410": {
+    "name": "Secondary Air Injection System Malfunction",
+    "description": "AIR pump system not functioning correctly.",
+    "commonCauses": [
+      "Failed AIR pump",
+      "Blocked AIR hoses",
+      "Faulty AIR check valve"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0420": {
+    "name": "Catalyst System Efficiency Below Threshold (Bank 1)",
+    "description": "Catalytic converter on Bank 1 is not operating at required efficiency. This is one of the most common Check Engine causes.",
+    "commonCauses": [
+      "Worn catalytic converter",
+      "Failed O2 sensor giving false reading",
+      "Oil burning (fouling cat)",
+      "Coolant leak into combustion (head gasket)"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0430": {
+    "name": "Catalyst System Efficiency Below Threshold (Bank 2)",
+    "description": "Catalytic converter on Bank 2 is not efficient enough.",
+    "commonCauses": [
+      "Worn catalytic converter (Bank 2)",
+      "Failed O2 sensor",
+      "Rich fuel mixture"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0440": {
+    "name": "EVAP System Malfunction",
+    "description": "Evaporative emission control system large leak or failure.",
+    "commonCauses": [
+      "Loose or missing fuel cap",
+      "Cracked EVAP hose",
+      "Faulty purge valve or vent solenoid"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0441": {
+    "name": "EVAP Incorrect Purge Flow",
+    "description": "EVAP purge flow is incorrect.",
+    "commonCauses": [
+      "Stuck purge valve",
+      "Blocked EVAP line",
+      "Faulty purge solenoid"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0442": {
+    "name": "EVAP System Small Leak",
+    "description": "A small leak has been detected in the evaporative emission system.",
+    "commonCauses": [
+      "Loose gas cap",
+      "Cracked vacuum hose",
+      "Faulty purge/vent valve"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0446": {
+    "name": "EVAP Vent Control Circuit",
+    "description": "EVAP canister vent solenoid circuit malfunction.",
+    "commonCauses": [
+      "Faulty vent solenoid",
+      "Blocked vent solenoid",
+      "Wiring issue"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0455": {
+    "name": "EVAP Large Leak",
+    "description": "Large leak detected in EVAP system.",
+    "commonCauses": [
+      "Missing or loose fuel cap",
+      "Large split in EVAP hose",
+      "Faulty purge solenoid stuck open"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0456": {
+    "name": "EVAP Very Small Leak",
+    "description": "Very small EVAP leak detected.",
+    "commonCauses": [
+      "Worn gas cap seal",
+      "Micro-crack in EVAP hose",
+      "Faulty canister"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "P0480": {
+    "name": "Cooling Fan Relay Circuit",
+    "description": "Cooling fan relay 1 control circuit malfunction.",
+    "commonCauses": [
+      "Failed cooling fan relay",
+      "Blown fuse",
+      "Wiring issue",
+      "Faulty PCM"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0500": {
+    "name": "Vehicle Speed Sensor A Malfunction",
+    "description": "VSS signal is absent or erratic.",
+    "commonCauses": [
+      "Faulty VSS",
+      "Damaged tone ring",
+      "Wiring damage"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0505": {
+    "name": "Idle Air Control System Malfunction",
+    "description": "Idle speed is not being controlled properly.",
+    "commonCauses": [
+      "Dirty or failed IAC valve",
+      "Vacuum leak",
+      "Carbon buildup in throttle body"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0507": {
+    "name": "Idle Control System RPM High",
+    "description": "Engine idle speed is too high.",
+    "commonCauses": [
+      "Vacuum leak",
+      "Stuck-open IAC valve",
+      "Dirty throttle body"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P0520": {
+    "name": "Engine Oil Pressure Sensor Circuit",
+    "description": "Oil pressure sensor circuit malfunction — do not ignore this.",
+    "commonCauses": [
+      "Faulty oil pressure sensor",
+      "Damaged wiring",
+      "Low oil level (check first!)"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0521": {
+    "name": "Engine Oil Pressure Sensor Range/Performance",
+    "description": "Oil pressure readings are out of expected range.",
+    "commonCauses": [
+      "Low oil level",
+      "Failing oil pump",
+      "Faulty oil pressure sensor",
+      "Oil viscosity issues"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0560": {
+    "name": "System Voltage Malfunction",
+    "description": "System voltage is outside normal operating range.",
+    "commonCauses": [
+      "Weak battery",
+      "Faulty alternator",
+      "Loose battery terminals",
+      "Bad ground connection"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0562": {
+    "name": "System Voltage Low",
+    "description": "Battery/charging system voltage is too low.",
+    "commonCauses": [
+      "Weak battery",
+      "Failing alternator",
+      "High electrical load"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0563": {
+    "name": "System Voltage High",
+    "description": "Battery voltage is too high (overcharging).",
+    "commonCauses": [
+      "Faulty voltage regulator",
+      "Overcharging alternator",
+      "Bad ground path"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0601": {
+    "name": "Internal Control Module Memory Check Sum Error",
+    "description": "PCM/ECM internal memory error.",
+    "commonCauses": [
+      "Faulty PCM/ECM",
+      "PCM software corruption",
+      "Low voltage damage to PCM"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0606": {
+    "name": "ECM/PCM Processor Fault",
+    "description": "Main processor in the ECM/PCM has a fault.",
+    "commonCauses": [
+      "Failing ECM/PCM",
+      "Voltage spike damage",
+      "Software fault"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0700": {
+    "name": "Transmission Control System Malfunction",
+    "description": "The TCM (Transmission Control Module) has detected a fault. Additional codes will be present.",
+    "commonCauses": [
+      "Low/dirty transmission fluid",
+      "Internal transmission failure",
+      "Faulty shift solenoid",
+      "Failing TCM"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0715": {
+    "name": "Input/Turbine Speed Sensor Circuit",
+    "description": "Transmission input speed sensor signal fault.",
+    "commonCauses": [
+      "Faulty speed sensor",
+      "Damaged wiring",
+      "Metal debris in transmission"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0720": {
+    "name": "Output Speed Sensor Circuit",
+    "description": "Transmission output speed sensor signal fault.",
+    "commonCauses": [
+      "Failed output speed sensor",
+      "Tone ring damage",
+      "Wiring issue"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0730": {
+    "name": "Incorrect Gear Ratio",
+    "description": "Transmission is achieving the wrong gear ratio for the commanded gear.",
+    "commonCauses": [
+      "Low transmission fluid",
+      "Worn clutch packs",
+      "Faulty shift solenoid"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0740": {
+    "name": "Torque Converter Clutch Circuit",
+    "description": "TCC solenoid or circuit malfunction.",
+    "commonCauses": [
+      "Failed TCC solenoid",
+      "Low transmission fluid",
+      "Worn torque converter"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0741": {
+    "name": "Torque Converter Clutch Stuck Off",
+    "description": "TCC is not engaging when commanded.",
+    "commonCauses": [
+      "Failed TCC solenoid",
+      "Worn torque converter",
+      "Low ATF pressure"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0750": {
+    "name": "Shift Solenoid A Malfunction",
+    "description": "Shift solenoid A circuit or performance fault.",
+    "commonCauses": [
+      "Failed shift solenoid",
+      "Dirty ATF clogging solenoid",
+      "Wiring fault"
+    ],
+    "severity": "high",
+    "category": "powertrain"
+  },
+  "P0801": {
+    "name": "Reverse Inhibit Control Circuit Malfunction",
+    "description": "Issue with reverse gear inhibit circuit.",
+    "commonCauses": [
+      "Faulty inhibit solenoid",
+      "PCM issue",
+      "Wiring fault"
+    ],
+    "severity": "medium",
+    "category": "powertrain"
+  },
+  "P1000": {
+    "name": "OBD Systems Readiness Test Not Complete",
+    "description": "OBD monitors have not completed their self-tests since the last clear. Not a fault — just needs drive cycles.",
+    "commonCauses": [
+      "Codes recently cleared",
+      "Battery recently disconnected",
+      "ECM reset"
+    ],
+    "severity": "low",
+    "category": "powertrain"
+  },
+  "B0001": {
+    "name": "Driver Frontal Stage 1 Deployment Control",
+    "description": "Airbag module fault — driver side front airbag circuit.",
+    "commonCauses": [
+      "Failed airbag inflator",
+      "Damaged clock spring",
+      "Wiring issue under seat"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0002": {
+    "name": "Driver Frontal Stage 2 Deployment Control",
+    "description": "Stage 2 driver airbag deployment circuit fault.",
+    "commonCauses": [
+      "Inflator failure",
+      "Wiring short",
+      "Faulty SRS module"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0010": {
+    "name": "Passenger Frontal Stage 1 Deployment Control",
+    "description": "Passenger airbag circuit fault.",
+    "commonCauses": [
+      "Failed passenger inflator",
+      "Wiring issue",
+      "Faulty SRS module"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0020": {
+    "name": "Right Front Seat Belt Pretensioner Deployment",
+    "description": "Seat belt pretensioner circuit fault.",
+    "commonCauses": [
+      "Damaged pretensioner",
+      "Wiring fault",
+      "Faulty SRS module"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0051": {
+    "name": "Left Front Curtain Deployment Control",
+    "description": "Left curtain airbag circuit fault.",
+    "commonCauses": [
+      "Faulty curtain airbag inflator",
+      "Damaged wiring harness",
+      "Side impact sensor issue"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0070": {
+    "name": "Restraints Control Module Internal Fault",
+    "description": "SRS/Airbag control module self-diagnostics failed.",
+    "commonCauses": [
+      "Failed SRS module",
+      "Voltage spike damage",
+      "Prior accident damage"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0081": {
+    "name": "Driver Seat Position Sensor",
+    "description": "Driver seat position sensor circuit fault — affects airbag deployment force.",
+    "commonCauses": [
+      "Faulty seat position sensor",
+      "Damaged wire under seat",
+      "Sensor obstructed"
+    ],
+    "severity": "medium",
+    "category": "body"
+  },
+  "B0090": {
+    "name": "Frontal Sensor — Left",
+    "description": "Front impact sensor on left side fault.",
+    "commonCauses": [
+      "Failed sensor",
+      "Accident damage",
+      "Corrosion in connector"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B0091": {
+    "name": "Frontal Sensor — Right",
+    "description": "Front impact sensor on right side fault.",
+    "commonCauses": [
+      "Failed sensor",
+      "Prior accident",
+      "Wiring damage"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B1000": {
+    "name": "ECU Malfunction",
+    "description": "Body control module internal fault.",
+    "commonCauses": [
+      "Failed BCM",
+      "Software corruption",
+      "Voltage issue"
+    ],
+    "severity": "high",
+    "category": "body"
+  },
+  "B1004": {
+    "name": "Vehicle Identification Number Not Programmed",
+    "description": "VIN not stored in ECU.",
+    "commonCauses": [
+      "ECU replacement without programming",
+      "BCM replacement",
+      "Software flash issue"
+    ],
+    "severity": "medium",
+    "category": "body"
+  },
+  "C0031": {
+    "name": "Right Front Wheel Speed Sensor Circuit",
+    "description": "ABS wheel speed sensor fault — right front.",
+    "commonCauses": [
+      "Faulty wheel speed sensor",
+      "Damaged tone ring",
+      "Wiring damage",
+      "Hub bearing failure"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0034": {
+    "name": "Right Front Wheel Speed Sensor Range/Performance",
+    "description": "Right front ABS sensor signal erratic or out of range.",
+    "commonCauses": [
+      "Worn tooth on tone ring",
+      "Excessive wheel bearing play",
+      "Contaminated sensor"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0035": {
+    "name": "Left Front Wheel Speed Sensor Circuit",
+    "description": "ABS wheel speed sensor fault — left front.",
+    "commonCauses": [
+      "Failed wheel speed sensor",
+      "Damaged encoder ring",
+      "Wiring issue"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0040": {
+    "name": "Right Rear Wheel Speed Sensor Circuit",
+    "description": "ABS wheel speed sensor fault — right rear.",
+    "commonCauses": [
+      "Failed sensor",
+      "Tone ring damage",
+      "Corroded connector"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0041": {
+    "name": "Right Rear Wheel Speed Sensor Range/Performance",
+    "description": "Right rear ABS sensor erratic signal.",
+    "commonCauses": [
+      "Worn tone ring",
+      "Excessive bearing play",
+      "Mud/debris on sensor"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0045": {
+    "name": "Left Rear Wheel Speed Sensor Circuit",
+    "description": "ABS wheel speed sensor fault — left rear.",
+    "commonCauses": [
+      "Failed sensor",
+      "Damaged wiring",
+      "Corroded connector"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0055": {
+    "name": "Rear Wheel Speed Sensor Circuit",
+    "description": "Rear (combined) wheel speed sensor circuit fault.",
+    "commonCauses": [
+      "Faulty sensor",
+      "Tone ring damage",
+      "Wiring fault"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0061": {
+    "name": "ABS Solenoid Valve Relay Circuit",
+    "description": "ABS modulator solenoid valve relay fault.",
+    "commonCauses": [
+      "Failed ABS module",
+      "Relay failure",
+      "Wiring issue"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0063": {
+    "name": "ABS Solenoid Valve Circuit — Left Front",
+    "description": "Left front ABS valve solenoid circuit fault.",
+    "commonCauses": [
+      "Failed ABS module",
+      "Internal ABS hydraulic unit fault"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0095": {
+    "name": "Brake Pressure Sensor",
+    "description": "Brake pressure sensor circuit or performance fault.",
+    "commonCauses": [
+      "Failed brake pressure sensor",
+      "Air in brake lines",
+      "ABS module fault"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0110": {
+    "name": "Pump Motor Circuit",
+    "description": "ABS/ESC pump motor circuit fault.",
+    "commonCauses": [
+      "Failed ABS pump motor",
+      "EBCM (ABS module) failure",
+      "Wiring fault"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0121": {
+    "name": "Valve Relay Circuit",
+    "description": "ABS/ESC valve relay circuit malfunction.",
+    "commonCauses": [
+      "Failed EBCM",
+      "Relay or fuse fault",
+      "Corrosion in connector"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0131": {
+    "name": "Anti-Lock Brake System Pressure Sensor",
+    "description": "ABS brake pressure sensor circuit fault.",
+    "commonCauses": [
+      "Failed pressure sensor",
+      "Hydraulic unit fault",
+      "Wiring issue"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0161": {
+    "name": "ABS/TCS Brake Switch Circuit",
+    "description": "Brake switch input to ABS module is incorrect.",
+    "commonCauses": [
+      "Faulty brake light switch",
+      "Wiring fault",
+      "EBCM issue"
+    ],
+    "severity": "medium",
+    "category": "chassis"
+  },
+  "C0186": {
+    "name": "Lateral Acceleration Sensor",
+    "description": "Lateral/yaw sensor circuit fault — affects ESC/stability control.",
+    "commonCauses": [
+      "Faulty yaw sensor",
+      "Damaged wiring",
+      "EBCM failure"
+    ],
+    "severity": "medium",
+    "category": "chassis"
+  },
+  "C0196": {
+    "name": "Yaw Rate Sensor",
+    "description": "Yaw rate sensor circuit fault.",
+    "commonCauses": [
+      "Failed yaw rate sensor",
+      "Sensor mounting issue",
+      "Wiring fault"
+    ],
+    "severity": "medium",
+    "category": "chassis"
+  },
+  "C0242": {
+    "name": "PCM Indicated Requested Torque Fault",
+    "description": "ABS/ESC module received invalid torque request from PCM.",
+    "commonCauses": [
+      "Faulty PCM",
+      "CAN bus communication issue",
+      "EBCM fault"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0265": {
+    "name": "EBCM Relay Circuit",
+    "description": "Electronic Brake Control Module relay circuit fault.",
+    "commonCauses": [
+      "Failed EBCM",
+      "Blown fuse",
+      "Relay failure"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0550": {
+    "name": "Electronic Control Unit Malfunction",
+    "description": "ABS/ESC control unit internal fault.",
+    "commonCauses": [
+      "Failed EBCM",
+      "Software corruption",
+      "Voltage damage"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "C0800": {
+    "name": "Device Power Circuit",
+    "description": "ABS/ESC module power supply circuit low voltage.",
+    "commonCauses": [
+      "Weak battery",
+      "Wiring fault",
+      "Bad ground"
+    ],
+    "severity": "high",
+    "category": "chassis"
+  },
+  "U0001": {
+    "name": "High Speed CAN Communication Bus",
+    "description": "High-speed CAN bus is not communicating properly.",
+    "commonCauses": [
+      "Damaged CAN bus wiring",
+      "Failed control module on bus",
+      "Loose connector"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0010": {
+    "name": "Medium Speed CAN Communication Bus",
+    "description": "Medium-speed CAN bus communication fault.",
+    "commonCauses": [
+      "Wiring fault",
+      "Module failure on bus",
+      "Connector issue"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0100": {
+    "name": "Lost Communication with ECM/PCM",
+    "description": "No CAN bus communication with the engine control module.",
+    "commonCauses": [
+      "Failed ECM/PCM",
+      "CAN bus wiring fault",
+      "Power/ground issue to ECM",
+      "Blown fuse"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0101": {
+    "name": "Lost Communication with TCM",
+    "description": "No CAN bus communication with the transmission control module.",
+    "commonCauses": [
+      "Failed TCM",
+      "CAN bus wiring fault",
+      "Power/ground issue to TCM"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0107": {
+    "name": "Lost Communication with Throttle Actuator Control Module",
+    "description": "No communication with TAC module — drive-by-wire throttle is affected.",
+    "commonCauses": [
+      "Failed TAC module",
+      "CAN bus fault",
+      "Power/ground issue"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0109": {
+    "name": "Lost Communication with Fuel Pump Control Module",
+    "description": "No CAN communication with the fuel pump module.",
+    "commonCauses": [
+      "Failed FPCM",
+      "CAN bus wiring",
+      "Power supply issue"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0110": {
+    "name": "Lost Communication with Drive Motor Control Module",
+    "description": "CAN communication lost with the drive motor controller (hybrids/EVs).",
+    "commonCauses": [
+      "Failed motor control module",
+      "CAN bus fault",
+      "High-voltage system issue"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0121": {
+    "name": "Lost Communication with ABS Control Module",
+    "description": "CAN bus communication lost with ABS/EBCM.",
+    "commonCauses": [
+      "Failed EBCM",
+      "CAN bus wiring fault",
+      "Blown fuse"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0122": {
+    "name": "Lost Communication with Vehicle Dynamics Control Module",
+    "description": "No communication with ESC/stability control module.",
+    "commonCauses": [
+      "Failed ESC module",
+      "CAN bus issue",
+      "Power fault to module"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0131": {
+    "name": "Lost Communication with Power Steering Control Module",
+    "description": "No CAN communication with the EPS module — electric power steering affected.",
+    "commonCauses": [
+      "Failed EPS module",
+      "CAN bus fault",
+      "Steering column wiring issue"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0140": {
+    "name": "Lost Communication with Body Control Module",
+    "description": "No CAN communication with BCM — multiple body electronics may be affected.",
+    "commonCauses": [
+      "Failed BCM",
+      "CAN bus wiring fault",
+      "Voltage/ground issue to BCM"
+    ],
+    "severity": "high",
+    "category": "network"
+  },
+  "U0155": {
+    "name": "Lost Communication with Instrument Panel Cluster",
+    "description": "No CAN communication with IPC/dashboard cluster.",
+    "commonCauses": [
+      "Failed instrument cluster",
+      "CAN bus fault",
+      "Power supply issue"
+    ],
+    "severity": "medium",
+    "category": "network"
+  },
+  "U0164": {
+    "name": "Lost Communication with HVAC Control Module",
+    "description": "No CAN communication with climate control module.",
+    "commonCauses": [
+      "Failed HVAC module",
+      "CAN bus fault",
+      "Wiring issue"
+    ],
+    "severity": "medium",
+    "category": "network"
+  },
+  "U0184": {
+    "name": "Lost Communication with Radio",
+    "description": "CAN bus communication with the radio/infotainment module is lost.",
+    "commonCauses": [
+      "Failed radio/head unit",
+      "CAN bus fault",
+      "Blown fuse"
+    ],
+    "severity": "low",
+    "category": "network"
+  },
+  "U0401": {
+    "name": "Invalid Data Received from ECM/PCM",
+    "description": "ECM data on CAN bus is present but invalid.",
+    "commonCauses": [
+      "ECM software issue",
+      "CAN bus interference",
+      "Failing ECM"
+    ],
+    "severity": "high",
+    "category": "network"
+  }
+}

@@ -423,12 +423,16 @@ export class ChatController {
     try {
       // Build context for AI
       const context: any = {};
-      
+
+      // Thread user + vehicle IDs so agentic tools can scope DB queries safely
+      if (userId) context.userId = userId;
+      if (vehicleId) context.vehicleId = vehicleId;
+
       if (imageUrl) {
         context.imageUrl = imageUrl;
       }
 
-      // Add vehicle context if available
+      // Add vehicle context if available (basic details for prompt building)
       if (vehicleId && userId) {
         const vehicle = await prisma.vehicle.findFirst({
           where: {

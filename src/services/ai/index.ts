@@ -1,6 +1,8 @@
 import { SimulatedAIService } from './simulated.service';
 import { AIResponse, AIContext } from './types';
 import OpenAI from 'openai';
+import { motorlyTools } from './tools/definitions';
+import { executeToolCall } from './tools/executor';
 
 export class AIService {
   private static instance: AIService;
@@ -131,8 +133,13 @@ export class AIService {
 
   /**
    * Shared logic for any OpenAI-compatible API (OpenAI, DeepSeek, etc.)
-   * Supports vision: when context.imageUrl is present, sends the image as a
-   * multimodal content array so the model can actually see it.
+   * Supports vision AND agentic tool calling.
+   *
+   * Tool-use loop:
+   *   1. Send messages + tool definitions to the LLM.
+   *   2. If the model calls one or more tools, execute them and append results.
+   *   3. Call the LLM again with the updated message history.
+   *   4. Repeat up to MAX_TOOL_ITERATIONS times, then force a final answer.
    */
   private async callOpenAICompatibleModel(
     client: OpenAI,
@@ -141,7 +148,9 @@ export class AIService {
     context?: AIContext,
     supportsVision: boolean = false
   ): Promise<AIResponse> {
-    const systemPrompt = `You are a helpful automotive AI assistant. Your response must be in valid JSON format.
+    const MAX_TOOL_ITERATIONS = 5;
+
+    const systemPrompt = `You are a helpful automotive AI assistant. Your FINAL response (after using any tools) must be in valid JSON format.
 You must return a JSON object with this exact structure, with no markdown wrappers or additional text:
 {
   "content": "A helpful conversational reply explaining the diagnosis...",
@@ -160,73 +169,145 @@ You must return a JSON object with this exact structure, with no markdown wrappe
   }
 }
 
-Do not include backticks or "json" tags. Just return the raw JSON object.`;
+Do not include backticks or "json" tags. Just return the raw JSON object.
+You have access to tools to look up real vehicle data — use them when they would improve your diagnosis.`;
 
     // Build the text portion of the prompt (vehicle context, history, etc.)
     const textPrompt = this.buildAIPrompt(userMessage, context);
 
-    // Build user message content — multimodal if image is present
+    // Build user message content — multimodal if image is present and model supports vision
     let userContent: OpenAI.Chat.ChatCompletionContentPart[] | string;
-
     if (context?.imageUrl && supportsVision) {
       userContent = [
         { type: 'text', text: textPrompt },
         {
           type: 'image_url',
-          image_url: {
-            url: context.imageUrl,
-            detail: 'high',
-          },
-        },
+          image_url: { url: context.imageUrl, detail: 'high' }
+        }
       ];
     } else {
       let finalPrompt = textPrompt;
       if (context?.imageUrl && !supportsVision) {
-          finalPrompt += `\n[Image URL provided but vision analysis is not supported by this AI model: ${context.imageUrl}]`;
+        finalPrompt += `\n[Image URL provided but vision analysis is not supported by this model: ${context.imageUrl}]`;
       }
       userContent = finalPrompt;
     }
 
-    try {
-      const response = await client.chat.completions.create({
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userContent },
-        ],
-        response_format: { type: 'json_object' },
-      });
+    // Build the message history for the tool-use loop
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userContent }
+    ];
 
-      const messageContent = response.choices[0]?.message?.content;
-      if (!messageContent) {
-        throw new Error('Empty response from AI API');
-      }
+    // Tool execution context — used to scope DB queries to the current user
+    const toolContext = {
+      userId: context?.userId ?? '',
+      vehicleId: context?.vehicleId
+    };
 
-      let cleanContent = messageContent.trim();
-      if (cleanContent.startsWith('```')) {
-        cleanContent = cleanContent.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '');
-      }
-      cleanContent = cleanContent.trim();
+    // ── Tool-use loop ──────────────────────────────────────────────────────
+    for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
+      const isLastIteration = iteration === MAX_TOOL_ITERATIONS - 1;
 
-      let parsedResponse: any;
       try {
-        parsedResponse = JSON.parse(cleanContent);
-      } catch (parseError) {
-        console.warn('AI returned invalid JSON, wrapping in text fallback:', cleanContent);
-        parsedResponse = {
-          content: cleanContent,
-          diagnosisResult: null
-        };
-      }
+        const response = await client.chat.completions.create({
+          model,
+          messages,
+          tools: motorlyTools,
+          // On the last iteration, disable tool use so the model MUST give a final answer
+          tool_choice: isLastIteration ? 'none' : 'auto',
+          response_format: { type: 'json_object' }
+        });
 
-      return {
-        content: parsedResponse.content || "I have analyzed your vehicle's issue, please review the diagnosis card.",
-        diagnosisResult: parsedResponse.diagnosisResult,
-      };
-    } catch (error) {
-      console.error(`AI API call failed (model: ${model}):`, error);
-      throw error;
+        const choice = response.choices[0];
+        const finishReason = choice?.finish_reason;
+        const assistantMessage = choice?.message;
+
+        if (!assistantMessage) {
+          throw new Error('Empty response from AI API');
+        }
+
+        // Append the assistant's message (tool calls or final answer) to history
+        messages.push(assistantMessage as OpenAI.Chat.ChatCompletionMessageParam);
+
+        // ── Case 1: model wants to call tools ─────────────────────────────
+        if (finishReason === 'tool_calls' && assistantMessage.tool_calls?.length) {
+          console.log(`[AI Agent] Iteration ${iteration + 1}: executing ${assistantMessage.tool_calls.length} tool(s)`);
+
+          // Execute all requested tool calls (can be parallel)
+          // Filter to standard 'function' type calls — SDK union includes custom tool call types
+          const functionToolCalls = assistantMessage.tool_calls.filter(
+            (tc): tc is OpenAI.Chat.ChatCompletionMessageToolCall & { type: 'function'; function: { name: string; arguments: string } } =>
+              tc.type === 'function'
+          );
+
+          const toolResults = await Promise.all(
+            functionToolCalls.map(async (toolCall) => {
+              let args: Record<string, any> = {};
+              try {
+                args = JSON.parse(toolCall.function.arguments);
+              } catch {
+                args = {};
+              }
+              const result = await executeToolCall(
+                toolCall.function.name,
+                args,
+                toolContext
+              );
+              return { toolCallId: toolCall.id, name: toolCall.function.name, result };
+            })
+          );
+
+          // Append each tool result as a 'tool' role message
+          for (const { toolCallId, result } of toolResults) {
+            messages.push({
+              role: 'tool',
+              tool_call_id: toolCallId,
+              content: JSON.stringify(result)
+            });
+          }
+
+          // Continue the loop — call the LLM again with tool results in context
+          continue;
+        }
+
+        // ── Case 2: model has a final answer ──────────────────────────────
+        if (finishReason === 'stop' || finishReason === 'length' || !assistantMessage.tool_calls) {
+          const messageContent = assistantMessage.content;
+          if (!messageContent) {
+            throw new Error('Empty final response from AI API');
+          }
+
+          let cleanContent = messageContent.trim();
+          if (cleanContent.startsWith('```')) {
+            cleanContent = cleanContent.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '');
+          }
+          cleanContent = cleanContent.trim();
+
+          let parsedResponse: any;
+          try {
+            parsedResponse = JSON.parse(cleanContent);
+          } catch (parseError) {
+            console.warn('[AI Agent] Final response is not valid JSON, wrapping:', cleanContent.slice(0, 200));
+            parsedResponse = { content: cleanContent, diagnosisResult: null };
+          }
+
+          return {
+            content: parsedResponse.content ?? "I have analyzed your vehicle's issue. Please review the diagnosis.",
+            diagnosisResult: parsedResponse.diagnosisResult
+          };
+        }
+
+        // Unexpected finish reason — break out
+        console.warn(`[AI Agent] Unexpected finish_reason: ${finishReason}`);
+        break;
+      } catch (error) {
+        console.error(`[AI Agent] Error in iteration ${iteration + 1} (model: ${model}):`, error);
+        throw error;
+      }
     }
+
+    throw new Error('AI agent tool-use loop exhausted without producing a final answer.');
   }
 
   /**

@@ -6,6 +6,10 @@ export interface AIResponse {
 }
 
 export interface AIContext {
+  /** User ID — used by agentic tools to scope all DB queries safely */
+  userId?: string;
+  /** Vehicle ID string — used by agentic tools when the model calls DB tools */
+  vehicleId?: string | null;
   vehicle?: {
     make: string;
     model: string;
