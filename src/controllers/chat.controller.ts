@@ -264,8 +264,15 @@ export class ChatController {
     try {
       const userId = (req as any).user?.id;
       const sessionId = req.params.id as string;
-      const { content }: SendMessageRequest = req.body;
+      const { content, useAgent }: SendMessageRequest & { useAgent?: any } = req.body;
       const file = req.file;
+
+      // Handle multipart form data where booleans might be strings
+      let isUseAgent = true;
+      if (useAgent !== undefined) {
+        isUseAgent = useAgent === 'false' || useAgent === false ? false : true;
+      }
+
 
       if (!userId) {
         res.status(401).json({ error: 'Not authenticated' });
@@ -319,7 +326,7 @@ export class ChatController {
       });
 
       // Generate AI response with context
-      const aiResponse = await ChatController.generateAIResponse(content.trim(), session.vehicleId, userId, sessionId, imageUrl);
+      const aiResponse = await ChatController.generateAIResponse(content.trim(), session.vehicleId, userId, sessionId, imageUrl, isUseAgent);
 
       // Create AI message
       const aiMessage = await prisma.chatMessage.create({
@@ -418,11 +425,15 @@ export class ChatController {
     vehicleId?: string | null,
     userId?: string,
     sessionId?: string,
-    imageUrl?: string | null
+    imageUrl?: string | null,
+    useAgent?: boolean
   ): Promise<{ content: string; diagnosisResult?: DiagnosisResult }> {
     try {
       // Build context for AI
       const context: any = {};
+      if (useAgent !== undefined) {
+        context.useAgent = useAgent;
+      }
 
       // Thread user + vehicle IDs so agentic tools can scope DB queries safely
       if (userId) context.userId = userId;

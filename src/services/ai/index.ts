@@ -208,14 +208,15 @@ You have access to tools to look up real vehicle data — use them when they wou
     // ── Tool-use loop ──────────────────────────────────────────────────────
     for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
       const isLastIteration = iteration === MAX_TOOL_ITERATIONS - 1;
+      const shouldDisableTools = isLastIteration || context?.useAgent === false;
 
       try {
         const response = await client.chat.completions.create({
           model,
           messages,
-          tools: motorlyTools,
-          // On the last iteration, disable tool use so the model MUST give a final answer
-          tool_choice: isLastIteration ? 'none' : 'auto',
+          // Only provide tools if we are allowed to use them
+          tools: context?.useAgent === false ? undefined : motorlyTools,
+          tool_choice: shouldDisableTools ? 'none' : 'auto',
           response_format: { type: 'json_object' }
         });
 

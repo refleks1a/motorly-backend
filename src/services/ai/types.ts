@@ -27,6 +27,8 @@ export interface AIContext {
     timestamp: string;
   }>;
   imageUrl?: string | null;
+  /** If false, disables the agentic tool loop and forces a single-shot fast response */
+  useAgent?: boolean;
 }
 
 export interface IssueIdentification {
