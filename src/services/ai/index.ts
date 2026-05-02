@@ -166,10 +166,21 @@ You must return a JSON object with this exact structure, with no markdown wrappe
       }
     ],
     "recommendedActions": ["Do this", "Check that"]
-  }
+  },
+  "clarificationQuestion": null,
+  "suggestedReplies": []
 }
 
-Do not include backticks or "json" tags. Just return the raw JSON object.
+IMPORTANT BREVITY RULES:
+- Match your response length to the user's intent. Short conversational messages (e.g. "thanks", "that was helpful", "ok", "got it") must get short, direct replies — one sentence maximum. Never summarize the conversation unless explicitly asked.
+- Never volunteer information the user did not ask for. Do not recap previous diagnoses or list action items unless the user asks.
+- Only produce a detailed "diagnosisResult" when the user is actually asking about a vehicle problem. For general conversation, set "diagnosisResult" to null.
+
+IMPORTANT CLARIFICATION RULES:
+- If the user's message is too vague to diagnose (e.g. "my car has a problem", "something is wrong"), you MUST ask a clarifying question instead of guessing.
+- When asking for clarification: set "content" to your question, set "clarificationQuestion" to the same question text, set "suggestedReplies" to 3-4 short tappable answer options (e.g. ["When braking", "While idling", "During acceleration", "All the time"]), and set "diagnosisResult" to null.
+- When you have enough information to diagnose: set "clarificationQuestion" to null, set "suggestedReplies" to [], and populate "diagnosisResult" normally.
+- Do not include backticks or "json" tags. Just return the raw JSON object.
 You have access to tools to look up real vehicle data — use them when they would improve your diagnosis.`;
 
     // Build the text portion of the prompt (vehicle context, history, etc.)
@@ -295,7 +306,11 @@ You have access to tools to look up real vehicle data — use them when they wou
 
           return {
             content: parsedResponse.content ?? "I have analyzed your vehicle's issue. Please review the diagnosis.",
-            diagnosisResult: parsedResponse.diagnosisResult
+            diagnosisResult: parsedResponse.diagnosisResult ?? undefined,
+            clarificationQuestion: parsedResponse.clarificationQuestion ?? undefined,
+            suggestedReplies: Array.isArray(parsedResponse.suggestedReplies) && parsedResponse.suggestedReplies.length > 0
+              ? parsedResponse.suggestedReplies
+              : undefined,
           };
         }
 

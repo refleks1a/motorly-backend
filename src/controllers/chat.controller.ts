@@ -365,7 +365,8 @@ export class ChatController {
         content: aiMessage.content,
         role: aiMessage.role as 'assistant',
         createdAt: aiMessage.createdAt.toISOString(),
-        diagnosisResult: aiMessage.diagnosisResult ? JSON.parse(aiMessage.diagnosisResult) as DiagnosisResult : undefined
+        diagnosisResult: aiMessage.diagnosisResult ? JSON.parse(aiMessage.diagnosisResult) as DiagnosisResult : undefined,
+        suggestedReplies: aiResponse.suggestedReplies,
       };
 
       res.status(201).json({
@@ -427,7 +428,7 @@ export class ChatController {
     sessionId?: string,
     imageUrl?: string | null,
     useAgent?: boolean
-  ): Promise<{ content: string; diagnosisResult?: DiagnosisResult }> {
+  ): Promise<{ content: string; diagnosisResult?: DiagnosisResult; suggestedReplies?: string[] }> {
     try {
       // Build context for AI
       const context: any = {};
@@ -500,7 +501,8 @@ export class ChatController {
       
       return {
         content: aiResponse.content,
-        diagnosisResult: aiResponse.diagnosisResult
+        diagnosisResult: aiResponse.diagnosisResult,
+        suggestedReplies: aiResponse.suggestedReplies,
       };
     } catch (error) {
       console.error('AI service error, falling back to basic response:', error);
