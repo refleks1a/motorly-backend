@@ -169,6 +169,8 @@ export interface ChatMessage {
   content: string;
   createdAt: string;
   diagnosisResult?: DiagnosisResult;
+  /** Populated when AI is asking a clarifying question */
+  suggestedReplies?: string[];
 }
 
 export interface DiagnosisResult {

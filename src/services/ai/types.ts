@@ -3,6 +3,10 @@ import { DiagnosisResult } from '../../types';
 export interface AIResponse {
   content: string;
   diagnosisResult?: DiagnosisResult;
+  /** Present when the AI needs more info before diagnosing */
+  clarificationQuestion?: string;
+  /** Quick-reply options the user can tap (populated only with clarificationQuestion) */
+  suggestedReplies?: string[];
 }
 
 export interface AIContext {
